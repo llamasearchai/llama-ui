@@ -25,7 +25,7 @@ LlamaUI is composed of two main parts:
 
 ```bash
 # Clone the repository
-git clone https://github.com/llamasearch/llama-ui.git
+git clone https://llamasearch.ai
 cd llama-ui
 
 # Start with Docker Compose
