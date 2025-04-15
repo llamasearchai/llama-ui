@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    platform: linux/arm64  # Optimized for Apple Silicon
+    volumes:
+      - ./backend:/app
+      - backend_node_modules:/app/node_modules
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - LOG_LEVEL=INFO
+      - HOST=0.0.0.0
+      - PORT=8000
+      - SECRET_KEY=97cacae21941c7f1508181262cabfb4f574a563485f8fb56ac243214ef0bf4ae
+      - ACCESS_TOKEN_EXPIRE_MINUTES=60
+      - CORS_ORIGINS=["http://localhost:3000", "http://localhost:3001", "http://frontend:3000"]
+      - MLX_DEFAULT_MODEL=llama-2-7b-mlx
+      - MLX_QUANTIZATION=True
+      - DISABLE_MLX_FEATURES=True
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    networks:
+      - llama-network
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    platform: linux/arm64  # Optimized for Apple Silicon
+    volumes:
+      - ./frontend:/app
+      - frontend_node_modules:/app/node_modules
+    ports:
+      - "3001:3000"  # Map container port 3000 to host port 3001
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+      - NEXT_PUBLIC_DISABLE_MLX_FEATURES=True
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - llama-network
+
+networks:
+  llama-network:
+    driver: bridge
+
+volumes:
+  backend_node_modules:
+  frontend_node_modules: 

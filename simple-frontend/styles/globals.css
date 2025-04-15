@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 10, 10, 20;
+  --background-end-rgb: 25, 25, 40;
+}
+
+html {
+  @apply bg-gray-950;
+}
+
+body {
+  background: linear-gradient(to bottom, 
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))) no-repeat fixed;
+  color: rgb(var(--foreground-rgb));
+  min-height: 100vh;
+}
+
+/* Glass Effect Utilities */
+@layer components {
+  .glass {
+    @apply bg-glass/10 backdrop-blur-lg border border-glass-border/20 shadow-glass;
+  }
+  
+  .glass-card {
+    @apply relative rounded-xl overflow-hidden glass shadow-glass-sm hover:shadow-glass transition-all duration-300 
+    before:content-[''] before:absolute before:inset-0 before:bg-glass-gradient before:opacity-0 before:transition-opacity before:duration-300
+    hover:before:opacity-100;
+  }
+  
+  .glass-card-highlight {
+    @apply absolute top-0 left-0 right-0 h-px bg-glass-highlight;
+  }
+  
+  .glass-input {
+    @apply bg-glass-border/10 backdrop-blur-sm border border-glass-border/30 rounded-lg text-white shadow-inner 
+    focus:outline-none focus:ring-2 focus:ring-primary-400/30 px-4 py-2 placeholder-white/30;
+  }
+  
+  .glass-button {
+    @apply glass px-4 py-2 rounded-lg transition-all duration-200 font-medium
+    shadow-sm hover:shadow flex items-center justify-center gap-2
+    focus:outline-none focus:ring-2 focus:ring-primary-400/30 
+    active:scale-95;
+  }
+  
+  .glass-button-primary {
+    @apply glass-button bg-primary-500/80 hover:bg-primary-500/90 text-white;
+  }
+  
+  .glass-button-secondary {
+    @apply glass-button bg-secondary-500/30 hover:bg-secondary-500/40 text-white;
+  }
+} 
